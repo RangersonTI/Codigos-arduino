@@ -1,5 +1,6 @@
 #include <SPI.h>
 #include <MFRC522.h>
+#include <list>
 
 
 #define led1 2 //VERMELHO
@@ -27,33 +28,53 @@ void loop() {
   int tempo = 2000;
 
   if(! leitor.PICC_IsNewCardPresent()){
+    digitalWrite(led1, HIGH);
+    Serial.println("Nenhum card");
+    delay(tempo);
     return;
   }
 
   if(! leitor.PICC_ReadCardSerial()){
-    return;
-  }
-
-  Serial.println("\nID da Tag: ");
-  String conteudo = "";
-  byte letra;
-
-  for (byte i=0;i<leitor.uid.size; i++){
-    //Serial.print(leitor.uid.uidByte[i] < 0x10 ? "0":"");
-    Serial.print(leitor.uid.uidByte[i], HEX);
-    //conteudo.concat(String(leitor.uid.uidByte[i] < 0x10 ? "0":""));
-    conteudo.concat(String(leitor.uid.uidByte[i], HEX));
-  }
-
-  delay(tempo);
-  
-  if(conteudo.substring(1) == "7395CC13" ){
-    Serial.print("Bem vindo tag");
-    digitalWrite(led1, HIGH);
-    delay(tempo);
+    Serial.print("Erro ao ler cartao/tag");
     digitalWrite(led1, LOW);
+    digitalWrite(led2, HIGH);
+    delay(tempo);
+    digitalWrite(led2, LOW);
     return;
   }
+  
+  digitalWrite(led1, LOW);
+  digitalWrite(led3, HIGH);
+  for (byte i = 0; i < leitor.uid.size; i++)
+  {
+    Serial.print(leitor.uid.uidByte[i], HEX);
+    Serial.print(" ");
+  }
+  Serial.println(" ");
+    
+  delay(tempo);
+  digitalWrite(led3, LOW);
+
+  //Serial.println("\nID da Tag: ");
+  //String conteudo = "";
+  //byte letra;
+
+  //for (byte i=0;i<leitor.uid.size; i++){
+  //  //Serial.print(leitor.uid.uidByte[i] < 0x10 ? "0":"");
+  //  Serial.print(leitor.uid.uidByte[i], HEX);
+  //  //conteudo.concat(String(leitor.uid.uidByte[i] < 0x10 ? "0":""));
+  //  conteudo.concat(String(leitor.uid.uidByte[i], HEX));
+  //}
+//
+  //delay(tempo);
+  //
+  //if(conteudo.substring(1) == "7395CC13" ){
+  //  Serial.print("Bem vindo tag");
+  //  digitalWrite(led1, HIGH);
+  //  delay(tempo);
+  //  digitalWrite(led1, LOW);
+  //  return;
+  //}
 }
 
 void cartao_lido(bool lido){
