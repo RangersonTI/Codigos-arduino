@@ -20,13 +20,13 @@ void setup() {
   pinMode(led3, OUTPUT);
   pinMode(buzzer, OUTPUT);
   leitor.PCD_Init();    // Inicia o modulo MFRC522
-  Serial.println("Aproxime seu cartão: ");
+  //Serial.println("Aproxime seu cartão: ");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   // int valor_som = analogRead(A0);
-  int tempo = 2000;
+  int tempo = 500;
 
   if(! leitor.PICC_IsNewCardPresent()){
     digitalWrite(led1, HIGH);
@@ -36,7 +36,7 @@ void loop() {
   }
 
   if(! leitor.PICC_ReadCardSerial()){
-    Serial.print("Erro ao ler cartao/tag");
+    //Serial.print("Erro ao ler cartao/tag");
     digitalWrite(led1, LOW);
     digitalWrite(led2, HIGH);
     tone(buzzer, 150, 100);
@@ -60,33 +60,6 @@ void loop() {
   tone(buzzer, 740,100);
   delay(tempo);
   digitalWrite(led3, LOW);
-
-  //Serial.println("\nID da Tag: ");
-  //String conteudo = "";
-  //byte letra;
-
-  //for (byte i=0;i<leitor.uid.size; i++){
-  //  //Serial.print(leitor.uid.uidByte[i] < 0x10 ? "0":"");
-  //  Serial.print(leitor.uid.uidByte[i], HEX);
-  //  //conteudo.concat(String(leitor.uid.uidByte[i] < 0x10 ? "0":""));
-  //  conteudo.concat(String(leitor.uid.uidByte[i], HEX));
-  //}
-//
-  //delay(tempo);
-  //
-  //if(conteudo.substring(1) == "7395CC13" ){
-  //  Serial.print("Bem vindo tag");
-  //  digitalWrite(led1, HIGH);
-  //  delay(tempo);
-  //  digitalWrite(led1, LOW);
-  //  return;
-  //}
-}
-
-void cartao_lido(bool lido){
-  bool cartaolido = lido;
-  return cartaolido;
-
 }
 
 
