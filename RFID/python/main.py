@@ -1,14 +1,14 @@
-import serial
-import mysql.connector as mysql
+import serial                              # pip install pyserial
+import mysql.connector as mysql            # pip install mysql.connector
 
 ser = serial.Serial('COM3',9600)
 mensagens = ['Nenhum card','Erro ao ler cartao/tag']
 
 conexao = mysql.connect(
-    host='192.168.1.105',
-    user='root',
-    password='wrede',
-    database='rfid2'
+    host='ip/dns',
+    user='user_database',
+    password='senha_user_database',
+    database='database'
 )
 
 cursor = conexao.cursor()
@@ -19,14 +19,14 @@ while True:
             info = ser.readline().decode('utf-8').strip()
             rfid = str(info)
             print(rfid)
-
-            sql = "INSERT INTO rfid_date(valor_tag_rfid) VALUES(%s)"
-            val = (rfid,)
-            cursor.execute(sql,val)
-            conexao.commit()
-            
-            print(f"Valor RFID: {rfid}")
-            print("Info salva :) \n\n")
+            if not (mensagens.__contains__(rfid)):
+                sql = "INSERT INTO rfid(rfid_value,ativo) VALUES(%s,%s);"
+                val = (rfid,1,)
+                cursor.execute(sql,val)
+                conexao.commit()
+                
+                print(f"Valor RFID: {rfid}")
+                print("Info salva :) \n\n")
     except Exception as ex:
         print(f"Erro: {ex}")
         
